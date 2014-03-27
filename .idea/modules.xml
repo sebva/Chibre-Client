@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Chibre-Client.iml" filepath="$PROJECT_DIR$/Chibre-Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Chibre-Client/Chibre-Client-Chibre-Client.iml" filepath="$PROJECT_DIR$/Chibre-Client/Chibre-Client-Chibre-Client.iml" />
+    </modules>
+  </component>
+</project>
+
