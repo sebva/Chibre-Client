@@ -5,12 +5,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.w3c.dom.Text;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -46,6 +43,20 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
                     e.printStackTrace();
                 }
                 return true;
+            case R.id.action_send:
+                new AsyncTask<Void, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Packet packet = new Packet("Useful message");
+                        for(int i = 0; i < 5; i++)
+                        {
+                            ConnectionManager.getInstance().sendPacket(packet);
+                        }
+                        return null;
+                    }
+                }.execute();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -56,31 +67,13 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
         TextView serverIp = (TextView) findViewById(R.id.server_ip);
         final InetAddress ip = InetAddress.getByName(serverIp.getText().toString());
         final ConnectionManager connectionManager = ConnectionManager.getInstance();
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                connectionManager.connectToServer(ip, ConnectActivity.this);
-                return null;
-            }
-        }.execute();
+        connectionManager.connectToServerAsync(ip, ConnectActivity.this);
     }
 
     @Override
     public void onConnectionResult(boolean connectionResult) {
         Toast.makeText(this, String.valueOf(connectionResult), Toast.LENGTH_SHORT).show();
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                ConnectionManager connectionManager = ConnectionManager.getInstance();
-                Packet packet = new Packet("Useful message");
-                for(int i = 0; i < 100; i++)
-                {
-                    connectionManager.sendPacket(packet);
-                }
-                return null;
-            }
-        }.execute();
+        final ConnectionManager connectionManager = ConnectionManager.getInstance();
+        connectionManager.setReceiving(connectionResult);
     }
 }

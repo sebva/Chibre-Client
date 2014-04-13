@@ -8,6 +8,12 @@
         android:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
         />
+    <item
+            android:id="@+id/action_send"
+            android:title="Send 5 packets"
+            android:showAsAction="ifRoom"
+            android:icon="@android:drawable/ic_menu_add"
+            />
 
 
 </menu>
