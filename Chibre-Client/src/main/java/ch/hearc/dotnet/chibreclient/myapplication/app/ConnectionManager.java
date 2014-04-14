@@ -10,6 +10,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Sébastien on 03.04.2014.
@@ -17,9 +19,11 @@ import java.net.SocketAddress;
 public class ConnectionManager {
     private static final int kPort = 24273;
     private static final String TAG = "ConnectionManager";
+    private static final UUID uuid = UUID.randomUUID();
     private InputStream input;
     private OutputStream output;
     private boolean receiving = false;
+    private Protocol protocol = null;
 
     public static interface ConnectionListener {
         public void onConnectionResult(boolean connectionResult);
@@ -39,8 +43,13 @@ public class ConnectionManager {
 
     }
 
-    public void connectToServerAsync(InetAddress serverAddress, final ConnectionListener listener) {
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
+    }
+
+    public void connectToServerAsync(String serverAddress, final ConnectionListener listener) {
         if(socket != null) {
+            receiving = false;
             closeConnection();
         }
         socket = new Socket();
@@ -90,6 +99,8 @@ public class ConnectionManager {
 
             @Override
             public void run() {
+                sendHello();
+
                 while (receiving) {
                     try {
                         if(input.available() < 4)
@@ -123,8 +134,10 @@ public class ConnectionManager {
         }.start();
     }
 
-    private void processData(Packet string) {
-        Log.d(TAG, "Received: " + string);
+    private void processData(Packet packet) {
+        Log.d(TAG, "Received: " + packet);
+        if(protocol != null)
+            protocol.onPacketReceived(packet);
     }
 
     public void closeConnection() {
@@ -145,5 +158,50 @@ public class ConnectionManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendHello() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("action", "hello");
+            json.put("uuid", uuid.toString());
+            Packet packet = new Packet(json.toString());
+            sendPacket(packet);
+        }
+        catch (Exception e) {}
+    }
+
+    public void playCard(Card card, List<Announce> announces) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("action", "play_card");
+            JSONObject cardJson = new JSONObject();
+            cardJson.put("value", card.getValue().toString());
+            cardJson.put("color", card.getColor().toString());
+            json.put("card", cardJson);
+            Packet packet = new Packet(json.toString());
+            sendPacket(packet);
+        }
+        catch (Exception e) {}
+    }
+
+    public void chooseAtout(Color atout) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("action", "choose_atout");
+            json.put("color", atout.toString());
+            sendPacket(new Packet(json.toString()));
+        }
+        catch (Exception e) {}
+    }
+
+    public void chibre() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("action", "choose_atout");
+            json.put("color", "chibre");
+            sendPacket(new Packet(json.toString()));
+        }
+        catch (Exception e) {}
     }
 }

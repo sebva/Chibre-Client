@@ -11,10 +11,20 @@ public class Game {
 
     public Game() {
         this.cardList = new ArrayList<Card>(9);
+        cm = ConnectionManager.getInstance();
+    }
+    private ConnectionManager cm;
+
+    public void playCard(int cardId) {
+        cm.playCard(cardList.get(cardId), null);
     }
 
-    public void playCard(Card card) {
+    public void chooseAtout(Color atout) {
+        cm.chooseAtout(atout);
+    }
 
+    public void chibre() {
+        cm.chibre();
     }
 
     public void announce(Announce announce) {

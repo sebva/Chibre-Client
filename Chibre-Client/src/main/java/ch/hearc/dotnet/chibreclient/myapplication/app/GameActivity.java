@@ -1,5 +1,9 @@
 package ch.hearc.dotnet.chibreclient.myapplication.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.widget.Button;
+import android.widget.ImageButton;
 import ch.hearc.dotnet.chibreclient.myapplication.app.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -10,6 +14,9 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -17,34 +24,16 @@ import android.view.View;
  *
  * @see SystemUiHider
  */
-public class GameActivity extends Activity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
+public class GameActivity extends Activity implements View.OnClickListener {
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-    private static final boolean TOGGLE_ON_CLICK = true;
-
-    /**
-     * The flags to pass to {@link SystemUiHider#getInstance}.
-     */
-    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
+    private List<ImageButton> cardsButtons;
+    private Game game;
 
     /**
      * The instance of the {@link SystemUiHider} for this activity.
      */
-    private SystemUiHider mSystemUiHider;
+    private int playerId;
+    private ConnectionManager connectionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,109 +41,137 @@ public class GameActivity extends Activity {
 
         setContentView(R.layout.activity_game);
 
-        final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content);
+        final int[] buttons = new int[] { R.id.card1, R.id.card2, R.id.card3, R.id.card4, R.id.card5, R.id.card6, R.id.card7, R.id.card8, R.id.card9 };
 
-        // Set up an instance of SystemUiHider to control the system UI for
-        // this activity.
-        mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
-        mSystemUiHider.setup();
-        mSystemUiHider
-                .setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
-                    // Cached values.
-                    int mControlsHeight;
-                    int mShortAnimTime;
+        connectionManager = ConnectionManager.getInstance();
+        Protocol protocol = new Protocol(new GameAdapter() {
 
+            @Override
+            public void onReceiveCards(final List<Card> cards, final boolean isAtout) {
+                game.cardList = cards;
+                GameActivity.this.runOnUiThread(new Runnable() {
                     @Override
-                    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-                    public void onVisibilityChange(boolean visible) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                            // If the ViewPropertyAnimator API is available
-                            // (Honeycomb MR2 and later), use it to animate the
-                            // in-layout UI controls at the bottom of the
-                            // screen.
-                            if (mControlsHeight == 0) {
-                                mControlsHeight = controlsView.getHeight();
-                            }
-                            if (mShortAnimTime == 0) {
-                                mShortAnimTime = getResources().getInteger(
-                                        android.R.integer.config_shortAnimTime);
-                            }
-                            controlsView.animate()
-                                    .translationY(visible ? 0 : mControlsHeight)
-                                    .setDuration(mShortAnimTime);
-                        } else {
-                            // If the ViewPropertyAnimator APIs aren't
-                            // available, simply show or hide the in-layout UI
-                            // controls.
-                            controlsView.setVisibility(visible ? View.VISIBLE : View.GONE);
-                        }
-
-                        if (visible && AUTO_HIDE) {
-                            // Schedule a hide().
-                            delayedHide(AUTO_HIDE_DELAY_MILLIS);
+                    public void run() {
+                        ((Button) findViewById(R.id.atout_button)).setEnabled(isAtout);
+                        for(int i = 1; i <= 9; i++) {
+                            ImageButton cardButton = ((ImageButton) findViewById(buttons[i - 1]));
+                            cardButton.setImageResource(CardImages.getImageIdForCard(GameActivity.this, cards.get(i - 1)));
+                            cardButton.setEnabled(false);
+                            cardButton.setVisibility(View.VISIBLE);
                         }
                     }
                 });
+            }
 
-        // Set up the user interaction to manually show or hide the system UI.
-        contentView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (TOGGLE_ON_CLICK) {
-                    mSystemUiHider.toggle();
-                } else {
-                    mSystemUiHider.show();
-                }
+            public void onReceiveTimeToPlay(final List<Card> possibleCards) {
+                GameActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i = 1; i <= 9; i++) {
+                            Card card = game.cardList.get(i - 1);
+                            ImageButton cardButton = ((ImageButton) findViewById(buttons[i - 1]));
+                            cardButton.setEnabled(possibleCards.contains(card));
+                        }
+                    }
+                });
             }
         });
+        connectionManager.setProtocol(protocol);
+        connectionManager.setReceiving(true);
+        
+        playerId = getIntent().getIntExtra("playerId", -1);
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        game = new Game();
+
+        cardsButtons = new ArrayList<ImageButton>(9);
+        for(int button : buttons)
+        {
+            ImageButton ib = (ImageButton) findViewById(button);
+            ib.setImageResource(CardImages.getImageIdForCard(this, Card.getCard(Color.pique, Value.dame)));
+            ib.setEnabled(false);
+            ib.setOnClickListener(this);
+            cardsButtons.add(ib);
+        }
+
+        Button atout_choose = (Button) findViewById(R.id.atout_button);
+        atout_choose.setOnClickListener(this);
+    }
+
+    private void disableEverything() {
+        for(ImageButton btn : cardsButtons) {
+            btn.setEnabled(false);
+        }
+        ((Button) findViewById(R.id.atout_button)).setEnabled(false);
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+    public void onClick(View v) {
+        if(v.getId() == R.id.atout_button) {
+            final Button atout_button = (Button) v;
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            String[] colors = new String[5];
+            colors[0] = getString(R.string.chibre);
+            int i = 1;
+            for(Color color : Color.values()) {
+                String colorStr = Character.toUpperCase(color.toString().charAt(0)) + color.toString().substring(1);
+                colors[i++] = colorStr;
             }
-            return false;
-        }
-    };
 
-    Handler mHideHandler = new Handler();
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mSystemUiHider.hide();
-        }
-    };
+            dialogBuilder.setItems(colors, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(which == 0)
+                        game.chibre();
+                    else {
+                        Color color = Color.values()[which -1];
+                        game.chooseAtout(color);
+                    }
+                    disableEverything();
+                }
+            });
 
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+            dialogBuilder.create().show();
+        }
+        else {
+            int cardId;
+            switch (v.getId()) {
+                case R.id.card1:
+                    cardId = 0;
+                    break;
+                case R.id.card2:
+                    cardId = 1;
+                    break;
+                case R.id.card3:
+                    cardId = 2;
+                    break;
+                case R.id.card4:
+                    cardId = 3;
+                    break;
+                case R.id.card5:
+                    cardId = 4;
+                    break;
+                case R.id.card6:
+                    cardId = 5;
+                    break;
+                case R.id.card7:
+                    cardId = 6;
+                    break;
+                case R.id.card8:
+                    cardId = 7;
+                    break;
+                case R.id.card9:
+                    cardId = 8;
+                    break;
+                default:
+                    cardId = -1;
+                    break;
+            }
+            if (cardId != -1) {
+                v.setVisibility(View.INVISIBLE);
+                game.playCard(cardId);
+                disableEverything();
+            }
+        }
     }
 }

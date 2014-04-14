@@ -2,11 +2,11 @@
 <resources>
 
     <string name="app_name">C#ibre</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_connect">ConnectActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="choose_atout">Choix atout</string>
+    <string name="title_activity_connect">C#ibre</string>
     <string name="server_ip">Server IP</string>
     <string name="connect_server">Connect to server</string>
+    <string name="too_much_players">Too much players!</string>
+    <string name="chibre">Chibre</string>
 
 </resources>

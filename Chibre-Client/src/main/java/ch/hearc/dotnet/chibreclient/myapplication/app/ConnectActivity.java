@@ -1,5 +1,6 @@
 package ch.hearc.dotnet.chibreclient.myapplication.app;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -43,20 +44,6 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
                     e.printStackTrace();
                 }
                 return true;
-            case R.id.action_send:
-                new AsyncTask<Void, Void, Void>() {
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        Packet packet = new Packet("Useful message");
-                        for(int i = 0; i < 5; i++)
-                        {
-                            ConnectionManager.getInstance().sendPacket(packet);
-                        }
-                        return null;
-                    }
-                }.execute();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -65,14 +52,27 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
 
     private void connectToServer() throws UnknownHostException {
         TextView serverIp = (TextView) findViewById(R.id.server_ip);
-        final InetAddress ip = InetAddress.getByName(serverIp.getText().toString());
         final ConnectionManager connectionManager = ConnectionManager.getInstance();
-        connectionManager.connectToServerAsync(ip, ConnectActivity.this);
+        Protocol protocol = new Protocol(new GameAdapter() {
+            @Override
+            public void onReceiveHello(int playerId) {
+                Intent intent = new Intent(ConnectActivity.this, GameActivity.class);
+                intent.putExtra("playerId", playerId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onReceiveRefusal() {
+                Toast.makeText(ConnectActivity.this, R.string.too_much_players, Toast.LENGTH_SHORT).show();
+            }
+        });
+        connectionManager.setProtocol(protocol);
+
+        connectionManager.connectToServerAsync(serverIp.getText().toString(), ConnectActivity.this);
     }
 
     @Override
     public void onConnectionResult(boolean connectionResult) {
-        Toast.makeText(this, String.valueOf(connectionResult), Toast.LENGTH_SHORT).show();
         final ConnectionManager connectionManager = ConnectionManager.getInstance();
         connectionManager.setReceiving(connectionResult);
     }

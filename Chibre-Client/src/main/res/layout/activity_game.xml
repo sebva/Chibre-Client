@@ -8,15 +8,91 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView android:id="@+id/fullscreen_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        android:textColor="#33b5e5"
-        android:textStyle="bold"
-        android:textSize="50sp"
-        android:gravity="center"
-        android:text="@string/dummy_content" />
+    <RelativeLayout android:id="@+id/fullscreen_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:background="@color/black_overlay"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card1"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card2"
+                android:src="@drawable/carreau_as"
+                android:layout_marginLeft="48dp"
+                android:layout_alignTop="@+id/card1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card3"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/card1"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card4"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/card2"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card5"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/card3"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card6"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/card4"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card7"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/card5"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card8"
+                android:src="@drawable/carreau_as"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/card6"/>
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/card9"
+                android:src="@drawable/carreau_as"
+                android:layout_alignTop="@+id/card7"
+                android:layout_toRightOf="@+id/card7"/>
+
+    </RelativeLayout>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
@@ -33,12 +109,13 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <Button android:id="@+id/dummy_button"
+            <Button android:id="@+id/atout_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="@string/choose_atout"
+                android:enabled="false"/>
 
         </LinearLayout>
     </FrameLayout>
