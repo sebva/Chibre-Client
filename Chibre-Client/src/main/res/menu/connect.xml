@@ -1,12 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ch.hearc.dotnet.chibreclient.myapplication.app.ConnectActivity" >
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_connect"
         android:title="@string/connect_server"
-        android:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_send"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_connect"
         />
 
 

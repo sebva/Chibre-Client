@@ -2,6 +2,8 @@ package ch.hearc.dotnet.chibreclient.myapplication.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.widget.Button;
 import android.widget.ImageButton;
 import ch.hearc.dotnet.chibreclient.myapplication.app.util.SystemUiHider;
@@ -56,7 +58,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
                         for(int i = 1; i <= 9; i++) {
                             ImageButton cardButton = ((ImageButton) findViewById(buttons[i - 1]));
                             cardButton.setImageResource(CardImages.getImageIdForCard(GameActivity.this, cards.get(i - 1)));
-                            cardButton.setEnabled(false);
+                            enableDisable(cardButton, false);
                             cardButton.setVisibility(View.VISIBLE);
                         }
                     }
@@ -71,7 +73,8 @@ public class GameActivity extends Activity implements View.OnClickListener {
                         for(int i = 1; i <= 9; i++) {
                             Card card = game.cardList.get(i - 1);
                             ImageButton cardButton = ((ImageButton) findViewById(buttons[i - 1]));
-                            cardButton.setEnabled(possibleCards.contains(card));
+                            boolean isPossible = possibleCards.contains(card);
+                            enableDisable(cardButton, isPossible);
                         }
                     }
                 });
@@ -80,7 +83,9 @@ public class GameActivity extends Activity implements View.OnClickListener {
         connectionManager.setProtocol(protocol);
         connectionManager.setReceiving(true);
         
-        playerId = getIntent().getIntExtra("playerId", -1);
+        playerId = getIntent().getIntExtra("playerId", -2) + 1;
+
+        getActionBar().setSubtitle(getString(R.string.player) + " " + playerId);
 
         game = new Game();
 
@@ -89,7 +94,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
         {
             ImageButton ib = (ImageButton) findViewById(button);
             ib.setImageResource(CardImages.getImageIdForCard(this, Card.getCard(Color.pique, Value.dame)));
-            ib.setEnabled(false);
+            enableDisable(ib, false);
             ib.setOnClickListener(this);
             cardsButtons.add(ib);
         }
@@ -100,9 +105,20 @@ public class GameActivity extends Activity implements View.OnClickListener {
 
     private void disableEverything() {
         for(ImageButton btn : cardsButtons) {
-            btn.setEnabled(false);
+            enableDisable(btn, false);
         }
         ((Button) findViewById(R.id.atout_button)).setEnabled(false);
+    }
+
+    private void enableDisable(ImageButton btn, boolean enabled) {
+        if(enabled)
+            btn.setColorFilter(android.graphics.Color.TRANSPARENT);
+        else {
+            int color = android.graphics.Color.argb(100, 0, 0, 0);
+            btn.setColorFilter(color);
+        }
+
+        btn.setEnabled(enabled);
     }
 
     @Override

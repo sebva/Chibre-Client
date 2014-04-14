@@ -24,7 +24,7 @@ public class Protocol {
             JSONObject json = new JSONObject(packet.getPayload());
             String action = json.getString("action");
             if("hello_reply".equals(action)) {
-                int playerId = json.optInt("player_id", -1);
+                int playerId = json.getInt("player_no");
                 listener.onReceiveHello(playerId);
             }
             else if("refusal".equals(action)) {
