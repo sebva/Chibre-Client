@@ -2,15 +2,14 @@ package ch.hearc.dotnet.chibreclient.myapplication.app;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.net.InetAddress;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -79,7 +78,7 @@ public class ConnectionManager {
 
     public void setReceiving(boolean accept) {
         if(accept ^ receiving) {
-            if(receiving == false)
+            if(!receiving)
                 startReceiving();
             else
                 receiving = accept;
@@ -171,7 +170,7 @@ public class ConnectionManager {
         catch (Exception e) {}
     }
 
-    public void playCard(Card card, List<Announce> announces) {
+    public void playCard(Card card) {
         try {
             JSONObject json = new JSONObject();
             json.put("action", "play_card");

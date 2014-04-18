@@ -1,41 +1,21 @@
 package ch.hearc.dotnet.chibreclient.myapplication.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import ch.hearc.dotnet.chibreclient.myapplication.app.util.SystemUiHider;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
- */
 public class GameActivity extends Activity implements View.OnClickListener {
 
     private List<ImageButton> cardsButtons;
     private Game game;
-
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    private int playerId;
-    private ConnectionManager connectionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +25,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
 
         final int[] buttons = new int[] { R.id.card1, R.id.card2, R.id.card3, R.id.card4, R.id.card5, R.id.card6, R.id.card7, R.id.card8, R.id.card9 };
 
-        connectionManager = ConnectionManager.getInstance();
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
         Protocol protocol = new Protocol(new GameAdapter() {
 
             @Override
@@ -54,7 +34,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
                 GameActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ((Button) findViewById(R.id.atout_button)).setEnabled(isAtout);
+                        findViewById(R.id.atout_button).setEnabled(isAtout);
                         for(int i = 1; i <= 9; i++) {
                             ImageButton cardButton = ((ImageButton) findViewById(buttons[i - 1]));
                             cardButton.setImageResource(CardImages.getImageIdForCard(GameActivity.this, cards.get(i - 1)));
@@ -82,8 +62,8 @@ public class GameActivity extends Activity implements View.OnClickListener {
         });
         connectionManager.setProtocol(protocol);
         connectionManager.setReceiving(true);
-        
-        playerId = getIntent().getIntExtra("playerId", -2) + 1;
+
+        int playerId = getIntent().getIntExtra("playerId", -2) + 1;
 
         getActionBar().setSubtitle(getString(R.string.player) + " " + playerId);
 
@@ -107,7 +87,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
         for(ImageButton btn : cardsButtons) {
             enableDisable(btn, false);
         }
-        ((Button) findViewById(R.id.atout_button)).setEnabled(false);
+        findViewById(R.id.atout_button).setEnabled(false);
     }
 
     private void enableDisable(ImageButton btn, boolean enabled) {
@@ -124,7 +104,6 @@ public class GameActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.atout_button) {
-            final Button atout_button = (Button) v;
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             String[] colors = new String[5];
             colors[0] = getString(R.string.chibre);

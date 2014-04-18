@@ -27,7 +27,7 @@ public class Packet {
         return intToByteArray(payload.length());
     }
 
-    public static final byte[] intToByteArray(int value) {
+    public static byte[] intToByteArray(int value) {
         return new byte[] {
                 (byte)(value >>> 24),
                 (byte)(value >>> 16),

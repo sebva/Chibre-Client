@@ -1,15 +1,13 @@
 package ch.hearc.dotnet.chibreclient.myapplication.app;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 
@@ -38,11 +36,7 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
         int id = item.getItemId();
         switch (id) {
             case R.id.action_connect:
-                try {
-                    connectToServer();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
+                connectToServer();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -50,7 +44,7 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
     }
 
 
-    private void connectToServer() throws UnknownHostException {
+    private void connectToServer() {
         TextView serverIp = (TextView) findViewById(R.id.server_ip);
         final ConnectionManager connectionManager = ConnectionManager.getInstance();
         Protocol protocol = new Protocol(new GameAdapter() {
@@ -63,7 +57,12 @@ public class ConnectActivity extends ActionBarActivity implements ConnectionMana
 
             @Override
             public void onReceiveRefusal() {
-                Toast.makeText(ConnectActivity.this, R.string.too_much_players, Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ConnectActivity.this, R.string.too_much_players, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         connectionManager.setProtocol(protocol);

@@ -16,7 +16,7 @@ public class Game {
     private ConnectionManager cm;
 
     public void playCard(int cardId) {
-        cm.playCard(cardList.get(cardId), null);
+        cm.playCard(cardList.get(cardId));
     }
 
     public void chooseAtout(Color atout) {
@@ -27,7 +27,4 @@ public class Game {
         cm.chibre();
     }
 
-    public void announce(Announce announce) {
-
-    }
 }

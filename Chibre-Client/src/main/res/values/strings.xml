@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">C#ibre</string>
-    <string name="choose_atout">Choix atout</string>
-    <string name="title_activity_connect">C#ibre</string>
+    <string name="app_name" translatable="false">C#ibre</string>
+    <string name="choose_atout">Choose atout</string>
+    <string name="title_activity_connect" translatable="false">@string/app_name</string>
     <string name="server_ip">Server IP</string>
     <string name="connect_server">Connect to server</string>
     <string name="too_much_players">Too much players!</string>
