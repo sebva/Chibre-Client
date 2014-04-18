@@ -19,8 +19,10 @@
 
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card1"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
@@ -28,66 +30,82 @@
                 android:layout_alignParentStart="true"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card2"
                 android:src="@drawable/carreau_as"
-                android:layout_marginLeft="48dp"
+                android:layout_marginLeft="@dimen/margin_card"
                 android:layout_alignTop="@+id/card1"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card3"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/card1"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card4"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/card2"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card5"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/card3"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card6"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/card4"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card7"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/card5"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card8"
                 android:src="@drawable/carreau_as"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/card6"/>
         <ImageButton
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/width_card"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:id="@+id/card9"
                 android:src="@drawable/carreau_as"
                 android:layout_alignTop="@+id/card7"
