@@ -9,5 +9,6 @@
     <string name="too_much_players">Too much players!</string>
     <string name="chibre">Chibre</string>
     <string name="player">Player</string>
+    <string name="will_close">Press back one more time to quit</string>
 
 </resources>

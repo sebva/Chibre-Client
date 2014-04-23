@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
 
     private List<ImageButton> cardsButtons;
     private Game game;
+    private boolean willClose = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +169,16 @@ public class GameActivity extends Activity implements View.OnClickListener {
                 game.playCard(cardId);
                 disableEverything();
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(willClose)
+            super.onBackPressed();
+        else {
+            willClose = true;
+            Toast.makeText(this, R.string.will_close, Toast.LENGTH_SHORT).show();
         }
     }
 }

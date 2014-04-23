@@ -7,5 +7,6 @@
     <string name="too_much_players">Trop de joueurs !</string>
     <string name="chibre">Chibre</string>
     <string name="player">Joueur</string>
+    <string name="will_close">Appuyer sur retour une fois de plus pour quitter</string>
 
 </resources>
