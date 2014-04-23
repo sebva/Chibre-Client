@@ -46,17 +46,17 @@ public class ConnectionManager {
         this.protocol = protocol;
     }
 
-    public void connectToServerAsync(String serverAddress, final ConnectionListener listener) {
+    public void connectToServerAsync(final String serverAddress, final ConnectionListener listener) {
         if(socket != null) {
             receiving = false;
             closeConnection();
         }
         socket = new Socket();
-        final SocketAddress address = new InetSocketAddress(serverAddress, kPort);
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
+                    SocketAddress address = new InetSocketAddress(serverAddress, kPort);
                     socket.connect(address, 3000);
                     input = socket.getInputStream();
                     output = socket.getOutputStream();
