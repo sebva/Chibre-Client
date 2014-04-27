@@ -26,4 +26,9 @@ public class GameAdapter implements GameListener {
     public void onReceiveTimeToPlay(List<Card> possibleCards) {
 
     }
+
+    @Override
+    public void onReceiveGoodBye() {
+        
+    }
 }

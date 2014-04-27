@@ -61,6 +61,16 @@ public class GameActivity extends Activity implements View.OnClickListener {
                     }
                 });
             }
+
+            @Override
+            public void onReceiveGoodBye() {
+                GameActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GameActivity.this.finish();
+                    }
+                });
+            }
         });
         connectionManager.setProtocol(protocol);
         connectionManager.setReceiving(true);

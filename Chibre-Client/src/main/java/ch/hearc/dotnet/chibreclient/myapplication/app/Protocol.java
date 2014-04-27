@@ -58,6 +58,9 @@ public class Protocol {
                 }
                 listener.onReceiveTimeToPlay(cardList);
             }
+            else if("goodbye".equals(action)) {
+                listener.onReceiveGoodBye();
+            }
             else
                 Log.w(TAG, "Unknown action received");
         } catch (JSONException e) {

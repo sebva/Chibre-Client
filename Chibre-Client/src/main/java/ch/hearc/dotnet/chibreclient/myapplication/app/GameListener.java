@@ -10,4 +10,5 @@ public interface GameListener {
     public void onReceiveCards(List<Card> cards, boolean isAtout);
     public void onReceiveRefusal();
     public void onReceiveTimeToPlay(List<Card> possibleCards);
+    public void onReceiveGoodBye();
 }
